@@ -1,0 +1,7 @@
+---
+- hosts: linux_servers
+  become: true
+  tasks:
+    - name: Display Kernel Version
+      debug:
+        var: ansible_kernel

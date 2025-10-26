@@ -1,5 +1,5 @@
 ---
-- hosts: linux_servers
+- hosts: debian_hosts
   become: true
   tasks:
     - name: Display Kernel Version

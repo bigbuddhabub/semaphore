@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Use API Key
+      ansible.builtin.debug:
+        msg: "The API Key is: {{ new_password }}"
+
+    - name: Use Username
+      ansible.builtin.debug:
+        msg: "The Username is: {{ target_user }}"

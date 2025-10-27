@@ -2,14 +2,11 @@
 - name: Change user password on Linux
   hosts: all
   become: true # Required for managing user accounts
-  vars:
-    target_user: "someuser" # Replace with the actual username
-    new_password: "YourSecurePassword" # Replace with the new password
 
   tasks:
     - name: Ensure password of {{ target_user }} is updated
       ansible.builtin.user:
         name: "{{ target_user }}"
-        password: "{{ new_password | password_hash('sha512') }}"
+        password: "{{ new_password }}"
         update_password: "always" # Ensures the password is always updated if changed
-      #no_log: true # Prevents the password from appearing in logs
+      no_log: true # Prevents the password from appearing in logs

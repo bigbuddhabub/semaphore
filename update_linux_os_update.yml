@@ -1,0 +1,27 @@
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Update package cache and upgrade system (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Update package database (Arch Linux)
+      ansible.builtin.pacman:
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Archlinux"
+
+    - name: Perform full system upgrade (Arch Linux)
+      ansible.builtin.command: pacman -Syu --noconfirm
+      when: ansible_facts['os_family'] == "Archlinux"
+      register: pacman_upgrade
+      changed_when: "'upgraded' in pacman_upgrade.stdout or 'installed' in pacman_upgrade.stdout"
+
+    - name: Clean up unused packages (Debian/Ubuntu)
+      ansible.builtin.apt:
+        autoremove: yes
+        autoclean: yes
+      when: ansible_facts['os_family'] == "Debian"

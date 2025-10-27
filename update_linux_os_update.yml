@@ -1,3 +1,5 @@
+---
+- name: Update Debian and Arch Linux hosts
   hosts: all
   become: yes
   gather_facts: yes

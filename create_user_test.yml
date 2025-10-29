@@ -15,21 +15,21 @@
 
     - name: Ensure .ssh directory exists
       ansible.builtin.file:
-        path: "/home/{{ username }}/.ssh"
+        path: "/home/{{ new_user }}/.ssh"
         state: directory
-        owner: "{{ username }}"
-        group: "{{ username }}"
+        owner: "{{ new_user }}"
+        group: "{{ new_user }}"
         mode: '0700'
 
     - name: Add authorized SSH key
       ansible.builtin.copy:
-        dest: "/home/{{ username }}/.ssh/authorized_keys"
+        dest: "/home/{{ new_user }}/.ssh/authorized_keys"
         content: "{{ user_ssh_key }}\n"
-        owner: "{{ username }}"
-        group: "{{ username }}"
+        owner: "{{ new_user }}"
+        group: "{{ new_user }}"
         mode: '0600'
 
     - name: Ensure shell is correctly set
       ansible.builtin.user:
-        name: "{{ username }}"
+        name: "{{ new_user }}"
         shell: "{{ user_shell }}"

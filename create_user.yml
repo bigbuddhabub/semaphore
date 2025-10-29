@@ -1,0 +1,16 @@
+---
+- name: Create a new Linux user
+  hosts: all # Replace with your inventory group or hostname
+  become: true # Required for user creation as it modifies system files
+
+  tasks:
+    - name: Create user
+      ansible.builtin.user:
+        name: {{ target_user }}
+        comment: "Created with Ansible"
+        shell: /bin/bash
+        home: /home/{{ target_user }}
+        state: present
+        # Optional: Set a password (hashed)
+        password: "{{ user_passwd | password_hash('sha512') }}"
+        update_password: on_create # Only set password on user creation

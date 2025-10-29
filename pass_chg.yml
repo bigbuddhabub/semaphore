@@ -9,4 +9,4 @@
         name: "{{ target_user }}"
         password: "{{ new_password | password_hash('sha512') }}"
         update_password: "always" # Ensures the password is always updated if changed
-      #no_log: true # Prevents the password from appearing in logs
+      no_log: true # Prevents the password from appearing in logs

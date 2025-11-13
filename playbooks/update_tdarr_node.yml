@@ -11,8 +11,13 @@
     - name: Run Tdarr Updater as tdarr user
       ansible.builtin.command: /opt/tdarr/Tdarr_Updater
       become_user: Tdarr
+      register: command_output
       args:
         chdir: /opt/tdarr
+
+    - name: Print the command output
+      ansible.builtin.debug:
+        var: command_output.stdout
 
     - name: Start Tdarr node service
       ansible.builtin.systemd:

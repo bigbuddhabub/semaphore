@@ -8,10 +8,12 @@
         name: tdarr_node.service
         state: stopped
 
-    - name: Run Tdarr Updater as tdarr user
+    - name: Run Tdarr Updater as tdarr user and wait for it to complete
       ansible.builtin.command: /opt/tdarr/Tdarr_Updater
       become_user: Tdarr
       register: command_output
+      async: 3600
+      poll: 10
       args:
         chdir: /opt/tdarr
 

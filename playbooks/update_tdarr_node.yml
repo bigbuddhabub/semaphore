@@ -1,5 +1,5 @@
 ---
-- name: Stop Tdarr node and run updater
+- name: Stop Tdarr node, update, and restart
   hosts: node
   become: yes
   tasks:
@@ -13,7 +13,7 @@
       become_user: tdarr
       args:
         chdir: /opt/tdarr
-		
+
     - name: Start Tdarr node service
       ansible.builtin.systemd:
         name: tdarr_node.service

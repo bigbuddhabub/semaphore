@@ -10,7 +10,7 @@
 
     - name: Run Tdarr Updater as tdarr user
       ansible.builtin.command: /opt/tdarr/Tdarr_Updater
-      become_user: tdarr
+      become_user: Tdarr
       args:
         chdir: /opt/tdarr
 

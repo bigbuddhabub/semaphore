@@ -1,0 +1,16 @@
+---
+- name: Add user to sudo group
+  hosts: all
+  become: yes # This ensures the task runs with elevated privileges
+  tasks:
+    - name: Add 'new_user' to the 'sudo' group (Debian/Ubuntu)
+      user:
+        name: "{{ new_user }}"
+        groups: sudo
+        append: true # Ensures existing groups are not overwritten
+
+    - name: Add 'new_user' to the 'wheel' group (RHEL/CentOS)
+      user:
+        name: "{{ new_user }}"
+        groups: wheel
+        append: true

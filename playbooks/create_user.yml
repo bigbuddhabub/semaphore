@@ -11,20 +11,19 @@
           - new_user is defined
           - user_shell is defined
           - user_ssh_key is defined
-          - user_uid is defined
-          - user_gid is defined
           - sudo_group is defined
 
-    - name: Ensure primary group exists
+    - name: Ensure primary group exists (optional GID)
       ansible.builtin.group:
         name: "{{ new_user }}"
         gid: "{{ user_gid }}"
         state: present
+      when: user_gid is defined
 
     - name: Ensure user "{{ new_user }}" exists
       ansible.builtin.user:
         name: "{{ new_user }}"
-        uid: "{{ user_uid }}"
+        uid: "{{ user_uid | default(omit) }}"
         group: "{{ new_user }}"
         shell: "{{ user_shell }}"
         create_home: yes

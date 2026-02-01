@@ -11,6 +11,9 @@
           - new_user is defined
           - user_shell is defined
           - user_ssh_key is defined
+          - user_uid is defined
+          - user_gid is defined
+          - sudo_group is defined
 
     - name: Ensure primary group exists
       ansible.builtin.group:

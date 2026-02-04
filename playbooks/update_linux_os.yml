@@ -8,7 +8,7 @@
     - name: Update package cache and upgrade system (Debian/Ubuntu)
       ansible.builtin.apt:
         update_cache: yes
-        upgrade: dist
+        upgrade: yes
       when: ansible_facts['os_family'] == "Debian"
 
     - name: Update package database (Arch Linux)

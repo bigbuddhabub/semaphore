@@ -12,6 +12,12 @@
         upgrade: yes
       when: ansible_facts['os_family'] == "Debian"
 
+    - name: Clean up unused packages (Debian/Ubuntu)
+      ansible.builtin.apt:
+        autoremove: yes
+        autoclean: yes
+      when: ansible_facts['os_family'] == "Debian"
+      
     - name: Update package database (Arch Linux)
       ansible.builtin.pacman:
         update_cache: yes
@@ -23,8 +29,3 @@
       register: pacman_upgrade
       changed_when: "'upgraded' in pacman_upgrade.stdout or 'installed' in pacman_upgrade.stdout"
 
-    - name: Clean up unused packages (Debian/Ubuntu)
-      ansible.builtin.apt:
-        autoremove: yes
-        autoclean: yes
-      when: ansible_facts['os_family'] == "Debian"

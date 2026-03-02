@@ -3,6 +3,7 @@
   hosts: all
   become: yes
   gather_facts: yes
+  serial: 1            # update one host at a time
 
   tasks:
     - name: Update package cache and upgrade system (Debian/Ubuntu)
@@ -16,8 +17,8 @@
         update_cache: yes
       when: ansible_facts['os_family'] == "Archlinux"
 
-    - name: Perform full system upgrade (Arch Linux)
-      ansible.builtin.command: pacman -Syu --noconfirm
+    - name: Perform full system upgrade (Arch Linux) and disable-sandbox
+      ansible.builtin.command: pacman -Syu --noconfirm --disable-sandbox
       when: ansible_facts['os_family'] == "Archlinux"
       register: pacman_upgrade
       changed_when: "'upgraded' in pacman_upgrade.stdout or 'installed' in pacman_upgrade.stdout"

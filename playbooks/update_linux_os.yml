@@ -9,7 +9,7 @@
     - name: Update package cache and upgrade system (Debian/Ubuntu)
       ansible.builtin.apt:
         update_cache: yes
-        upgrade: yes
+        upgrade: dist
       when: ansible_facts['os_family'] == "Debian"
 
     - name: Clean up unused packages (Debian/Ubuntu)

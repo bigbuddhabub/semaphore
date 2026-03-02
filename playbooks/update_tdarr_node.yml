@@ -20,6 +20,12 @@
       ansible.builtin.debug:
         var: command_output.stdout
 
+    - name: Ensure the directory has 777 permissions
+      ansible.builtin.file:
+        path: /opt/tdarr/Tdarr_Node/assets
+        state: directory
+        mode: '777'
+
     - name: Start Tdarr node service
       ansible.builtin.systemd:
         name: tdarr_node.service

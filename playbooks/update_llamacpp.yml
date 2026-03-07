@@ -24,7 +24,7 @@
       ansible.builtin.set_fact:
         llama_asset: "{{ item }}"
       loop: "{{ llama_release.json.assets }}"
-      when: "'ubuntu' in item.name | lower and 'vulkan' in item.name | lower"
+      when: "'ubuntu-vulkan' in item.name | lower
 
     - name: Fail if Vulkan asset not found
       ansible.builtin.fail:

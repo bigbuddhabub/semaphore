@@ -1,0 +1,52 @@
+---
+- name: Install latest llama.cpp Vulkan build
+  hosts: all
+  become: true
+  vars:
+    llama_install_dir: /opt/llm
+    github_api_release: https://api.github.com/repos/ggml-org/llama.cpp/releases/latest
+
+  tasks:
+
+    - name: Ensure install directory exists
+      ansible.builtin.file:
+        path: "{{ llama_install_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Query latest llama.cpp release
+      ansible.builtin.uri:
+        url: "{{ github_api_release }}"
+        return_content: true
+      register: llama_release
+
+    - name: Find Ubuntu Vulkan asset
+      ansible.builtin.set_fact:
+        llama_asset: "{{ item }}"
+      loop: "{{ llama_release.json.assets }}"
+      when: "'ubuntu' in item.name | lower and 'vulkan' in item.name | lower"
+
+    - name: Fail if Vulkan asset not found
+      ansible.builtin.fail:
+        msg: "Could not locate Ubuntu Vulkan binary in latest llama.cpp release"
+      when: llama_asset is not defined
+
+    - name: Download llama.cpp Vulkan binary
+      ansible.builtin.get_url:
+        url: "{{ llama_asset.browser_download_url }}"
+        dest: "/tmp/{{ llama_asset.name }}"
+        mode: "0644"
+
+    - name: Extract archive
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ llama_asset.name }}"
+        dest: "{{ llama_install_dir }}"
+        remote_src: true
+        extra_opts:
+          - --strip-components=1
+
+    - name: Create symlink for llama-cli
+      ansible.builtin.file:
+        src: "{{ llama_install_dir }}/bin/llama-cli"
+        dest: /usr/local/bin/llama-cli
+        state: link

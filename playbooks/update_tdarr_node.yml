@@ -1,6 +1,6 @@
 ---
 - name: Stop Tdarr node, update, and restart
-  hosts: node
+  hosts: tdarr_gpu_arch_lxc
   become: yes
   tasks:
     - name: Stop Tdarr node service

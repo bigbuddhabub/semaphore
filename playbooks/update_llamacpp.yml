@@ -52,7 +52,7 @@
 
     - name: Create symlink for llama-cli
       ansible.builtin.file:
-        src: "{{ llama_install_dir }}/bin/llama-server"
+        src: "{{ llama_install_dir }}/llama-server"
         dest: /opt/llm/bin/llama-server
         state: link
 

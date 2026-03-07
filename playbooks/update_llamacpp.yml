@@ -1,6 +1,6 @@
 ---
 - name: Install latest llama.cpp Vulkan build
-  hosts: all
+  hosts: llama_debian_lxc
   become: true
   vars:
     llama_install_dir: /opt/llm

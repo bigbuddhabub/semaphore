@@ -1,9 +1,9 @@
 ---
 - name: Install latest llama.cpp Vulkan build
   hosts: llama_debian_lxc
-  become: yes
+  become: true
   vars:
-    llama_install_dir: /opt/llm
+    llama_install_dir: /opt/llm/llama.cpp
     github_api_release: https://api.github.com/repos/ggml-org/llama.cpp/releases/latest
 
   tasks:
@@ -47,6 +47,6 @@
 
     - name: Create symlink for llama-cli
       ansible.builtin.file:
-        src: "{{ llama_install_dir }}/bin/llama-cli"
-        dest: /usr/local/bin/llama-cli
+        src: "{{ llama_install_dir }}/bin/llama-server"
+        dest: /opt/llm/bin/llama-server
         state: link

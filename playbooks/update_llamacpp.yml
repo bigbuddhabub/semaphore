@@ -1,7 +1,7 @@
 ---
 - name: Install latest llama.cpp Vulkan build
   hosts: llama_debian_lxc
-  become: true
+  become: yes
   vars:
     llama_install_dir: /opt/llm
     github_api_release: https://api.github.com/repos/ggml-org/llama.cpp/releases/latest

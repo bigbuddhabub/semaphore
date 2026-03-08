@@ -48,7 +48,7 @@
         user: "{{ new_user }}"
         key: "{{ user_ssh_key }}"
         state: present
-		
+
     - name: Check if "/etc/sudoers.d/{{ new_user }}" already exists
       stat:
         path: "/etc/sudoers.d/{{ new_user }}"

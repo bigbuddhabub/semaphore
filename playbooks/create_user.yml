@@ -1,5 +1,5 @@
 ---
-- name: Create new Linux user with SSH key and shell
+- name: Create new Linux user with SSH key, shell, and add file to /etc/sudoers.d if needed
   hosts: all
   become: yes
 
@@ -9,9 +9,11 @@
       ansible.builtin.assert:
         that:
           - new_user is defined
+          - user_passwd is defined
           - user_shell is defined
           - user_ssh_key is defined
           - sudo_group is defined
+          - add_sudoers_file is defined
 
     - name: Ensure primary group exists (optional GID)
       ansible.builtin.group:
@@ -46,3 +48,18 @@
         user: "{{ new_user }}"
         key: "{{ user_ssh_key }}"
         state: present
+		
+    - name: Check if "/etc/sudoers.d/{{ new_user }}" already exists
+      stat:
+        path: "/etc/sudoers.d/{{ new_user }}"
+      register: sudoers_exists
+      when: add_sudoers_file
+
+    - name: Create /etc/sudoers.d/ansible file
+      copy:
+        dest: "/etc/sudoers.d/{{ new_user }}"
+        content: "{{ new_user }} ALL=(ALL) NOPASSWD: ALL\n"
+        owner: root
+        group: root
+        mode: '0440'
+      when: (not sudoers_exists.stat.exists) and (add_sudoers_file)

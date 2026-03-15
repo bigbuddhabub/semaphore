@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+# ===== TRUECOLOR PALETTE =====
+blue1="\033[38;2;40;80;255m"
+blue2="\033[38;2;60;110;255m"
+blue3="\033[38;2;80;140;255m"
+blue4="\033[38;2;110;170;255m"
+reset="\033[0m"
+
+# ===== TERMINAL WIDTH =====
+WIDTH=$(tput cols 2>/dev/null || echo 80)
+
+center() {
+    printf "%*s\n" $(((${#1}+$WIDTH)/2)) "$1"
+}
+
+# ===== SYSTEM INFO =====
+HOST=$(hostname)
+KERNEL=$(uname -r)
+UPTIME=$(uptime -p | sed 's/up //')
+IP=$(hostname -I | awk '{print $1}')
+
+CPU_MODEL=$(grep -m1 "model name" /proc/cpuinfo | cut -d ":" -f2 | sed 's/^ //')
+
+MEM_USED=$(free -m | awk '/Mem:/ {print $3}')
+MEM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
+
+DISK_USED=$(df / | awk 'NR==2 {print $3}')
+DISK_TOTAL=$(df / | awk 'NR==2 {print $2}')
+
+# ===== GPU DETECTION =====
+GPU=$(lspci | grep -i 'vga\|3d\|display' | head -1 | cut -d ":" -f3)
+
+# ===== TEMPERATURE =====
+TEMP=$(sensors 2>/dev/null | grep -m1 '°C' | awk '{print $2}')
+[ -z "$TEMP" ] && TEMP="N/A"
+
+# ===== BAR FUNCTION =====
+bar() {
+    local used=$1
+    local total=$2
+    local width=30
+
+    local percent=$(( used * 100 / total ))
+    local filled=$(( percent * width / 100 ))
+
+    printf "["
+    for ((i=0;i<width;i++)); do
+        if [ $i -lt $filled ]; then
+            printf "#"
+        else
+            printf "-"
+        fi
+    done
+    printf "] %s%%" "$percent"
+}
+
+clear
+
+echo ""
+center "$(echo -e "${blue3}SERVER STATUS DASHBOARD${reset}")"
+center "$(echo -e "${blue2}System Overview${reset}")"
+echo ""
+
+printf "${blue3} Hostname :${reset} %s\n" "$HOST"
+printf "${blue3} IP       :${reset} %s\n" "$IP"
+printf "${blue3} Kernel   :${reset} %s\n" "$KERNEL"
+printf "${blue3} Uptime   :${reset} %s\n" "$UPTIME"
+printf "${blue3} CPU      :${reset} %s\n" "$CPU_MODEL"
+printf "${blue3} GPU      :${reset} %s\n" "$GPU"
+printf "${blue3} Temp     :${reset} %s\n" "$TEMP"
+
+echo ""
+
+printf "${blue4} Memory   ${reset}"
+bar "$MEM_USED" "$MEM_TOTAL"
+echo ""
+
+printf "${blue4} Disk     ${reset}"
+bar "$DISK_USED" "$DISK_TOTAL"
+echo ""
+
+echo ""

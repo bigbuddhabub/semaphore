@@ -39,12 +39,12 @@
     - name: Download llama.cpp Vulkan binary
       ansible.builtin.get_url:
         url: "{{ llama_asset.browser_download_url }}"
-        dest: "/tmp/{{ llama_asset.name }}"
+        dest: "/opt/llm/tmp/{{ llama_asset.name }}"
         mode: "0644"
 
     - name: Extract archive
       ansible.builtin.unarchive:
-        src: "/tmp/{{ llama_asset.name }}"
+        src: "/opt/llm/tmp/{{ llama_asset.name }}"
         dest: "{{ llama_install_dir }}"
         remote_src: true
         extra_opts:

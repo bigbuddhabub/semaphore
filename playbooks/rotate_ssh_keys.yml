@@ -1,0 +1,21 @@
+- name: Update SSH keys
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Validate required variables
+      ansible.builtin.assert:
+        that:
+          - user_name is defined
+          - user_ssh_key is defined
+          - key_state is defined
+          - key_exclusive is defined
+        fail_msg: "Required variables are missing"
+        success_msg: "All required variables are defined"
+
+    - name: Update "{{ user_name }}" SSH key "{{ user_ssh_key }}"
+      ansible.posix.authorized_key:
+        user: "{{ user_name }}"
+        state: "{{ key_state }}"
+        exclusive: "{{ key_exclusive }}"
+        key: "{{ user_ssh_key }}"
